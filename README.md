@@ -6,11 +6,15 @@ A Hello World Brigade project intended to test the [Brigade GCR Gateway](https:/
 
 These instructions assume Brigade is already running on a k8s cluster, see the [install guide](https://github.com/Azure/brigade/blob/master/docs/topics/install.md)
 for more information.
+Note that it's _recommended_ to isolate brigade in it's own namespace and _enable
+RBAC_, see the [security guide](https://github.com/Azure/brigade/blob/master/docs/topics/security.md)
+for more information.
 
 First generate a `values.yaml` which holds the project config (don't commit this file):
 
 ```
 $ helm repo add brigade https://azure.github.io/brigade
+
 $ helm inspect values brigade/brigade-project > values.yaml
 ```
 
@@ -25,8 +29,10 @@ sharedSecret: "SOME_SECRET"
 
 ## Installing a Brigade Project
 
+_It's recommended that Brigade is installed in it's own namespace, see the [Brigade Security Guide](https://github.com/Azure/brigade/blob/master/docs/topics/security.md) for more information._
+
 ```
-$ helm install brigade/brigade-project -n brigade-hello-world -f values.yaml
+$ helm install brigade/brigade-project --namespace brigade -n brigade-hello-world -f values.yaml
 ```
 
 Check the status of the project by running:
@@ -38,7 +44,7 @@ $ helm status brigade-hello-world
 A Brigade project can be updated after changing fields in `values.yaml` by running:
 
 ```
-$ helm upgrade brigade/brigade-project brigade-hello-world -f values.yaml
+$ helm upgrade brigade-hello-world brigade/brigade-project -f values.yaml --namespace brigade
 ```
 
 And deleted by running:
@@ -47,7 +53,7 @@ And deleted by running:
 $ helm delete brigade-hello-world
 ```
 
-## Using the `brig` Client
+## Using the Brigade Client
 
 At the moment there're no prebuilt binaries for `brig`, follow the [developer guide](https://github.com/Azure/brigade/blob/master/docs/topics/developers.md)
 to install `brig`.
